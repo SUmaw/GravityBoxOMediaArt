@@ -235,10 +235,19 @@ public class ModLockscreen {
                         mStatusBar = param.thisObject;
                     }
 
-                    int state = XposedHelpers.getIntField(mStatusBar, "mState");
-                    if (state != StatusBarState.KEYGUARD && state != StatusBarState.SHADE_LOCKED) {
-                        if (DEBUG) log("updateMediaMetaData: Invalid status bar state: " + state);
-                        return;
+     if (hasArtwork && mPrefs.getBoolean(GravityBoxSettings.PREF_KEY_LOCKSCREEN_MEDIA_ART_DISABLE, false)) {
+                        hasArtwork = false;
+                        backDrop.setVisibility(View.GONE);
+                        backDropBack.setImageDrawable(null);
+                        try {
+                            Object colorExtractor = XposedHelpers.getObjectField(mStatusBar, "mColorExtractor");
+                            XposedHelpers.callMethod(colorExtractor, "setMediaBackdropVisible", false);
+                        } catch (Throwable ignore) {}
+                        try {
+                            Object sbWm = XposedHelpers.getObjectField(mStatusBar, "mStatusBarWindowManager");
+                            XposedHelpers.callMethod(sbWm, "setBackdropShowing", false);
+                        } catch (Throwable ignore) {}
+                        if (DEBUG) log("updateMediaMetaData: artwork hidden");
                     }
 
                     View backDrop = (View) XposedHelpers.getObjectField(mStatusBar, "mBackdrop");
@@ -259,7 +268,9 @@ public class ModLockscreen {
                     if (DEBUG) log("updateMediaMetaData: hasArtwork=" + hasArtwork);
 
                     // custom background
-                    if (!hasArtwork && mCustomBg != null) {
+                     int state = XposedHelpers.getIntField(mStatusBar, "mState");
+                    if (!hasArtwork && mCustomBg != null && state != StatusBarState.SHADE &&
+                            mKgMonitor.isInteractive()) {
                         backDrop.animate().cancel();
                         backDropBack.animate().cancel();
                         backDropBack.setImageBitmap(mCustomBg);
