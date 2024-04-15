@@ -241,6 +241,11 @@
                 android:summary="@string/state_default"
                 forceCustomIcon="true"
                 allowGravityBoxActions="false" />
+            
+            <CheckBoxPreference
+                android:key="pref_lockscreen_media_art_disable"
+                android:title="@string/pref_lockscreen_media_art_disable_title"
+                android:defaultValue="false" />
 
         </PreferenceCategory>
 
