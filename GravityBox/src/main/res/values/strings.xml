@@ -149,6 +149,7 @@
     <string name="lockscreen_background_result_successful">Background changed</string>
     <string name="lockscreen_background_result_not_successful">Background not changed</string>
     <string name="pref_cat_lockscreen_other_title">Other</string>
+    <string name="pref_lockscreen_media_art_disable_title">Disable media art</string>
 
     <!--  Power tweaks category -->
     <string name="pref_cat_power_title">Power tweaks</string>
